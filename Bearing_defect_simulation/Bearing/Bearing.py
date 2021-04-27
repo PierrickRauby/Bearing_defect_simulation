@@ -13,8 +13,8 @@ class Bearing(object):
     """
     def __init__(self,a_n:int=16,a_dP:float=71.501,a_race:str='outer',
             a_rpm:int=2000,a_dB:float=8.4074,a_theta:float=15.17,
-            a_L:int=2.2,a_N:int=3,
-            a_lambda:np.ndarray=[0.7,0.7,0.8],a_delta:np.ndarray=[0.5,0,0.5]):
+            a_L:int=3.8,a_N:int=5,
+            a_lambda:np.ndarray=[0.7,0.7,0.8,0.8,0.8],a_delta:np.ndarray=[0.5,0,0.5,0,0.7]):
         self.m_n=a_n # The number of rolling element
         self.m_dP=a_dP # The pitch diameter of the bearing
         self.m_dB=a_dB # The diameter of the rolling element 

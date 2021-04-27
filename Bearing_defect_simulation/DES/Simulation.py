@@ -33,6 +33,8 @@ class Simulation(object):
                 for i in range(self.m_n_ball_to_pass)]
         self.m_bearing=bearing
         self.m_acquisition=acquisition
+        # Proportionality constant
+        self.m_gamma=1
 
         # Create a thread per ball, but don't start it
         # TODO: check speed with thread and processes, be carefull needs a lot 
@@ -54,37 +56,59 @@ class Simulation(object):
         #advange along x during dt
         dx=self.m_acquisition.m_dt/ball.m_duration*self.m_bearing.m_defect.m_L
         dt=time_enter_defect
+        if i==1 or i==0:
+            print("thread: "+str(i)+" time_enter_defect: "+str(time_enter_defect))
         while(dt<time_exit_defect):
             dt+=self.m_acquisition.m_dt
             ball.advance(dx)
             interval_underball=self.find_interval_under_ball(ball,i)
             if(interval_underball):
-                if i==0:
-                    print("contact interval: "+str(interval_underball))
-                # contact I store the results
+                # if i==1 :#or i==0:
+                    # print("interval_underball: "+str(interval_underball))
+                    amplitude=self.get_amplitude(ball,interval_underball)
+                    position_in_array=self.get_position_pulse_in_waveform\
+                            (time_enter_defect,dt)
+                    # print("thread: "+str(i)+" dt: "+str(dt))
+                    # print("thread: "+str(i)+" amplitude: "+str(amplitude))
+                    # print("thread: "+str(i)+" position_in_array: "+str(position_in_array))
+                    self.m_acquisition.m_waveform[position_in_array]=amplitude
+                    # test_list=self.m_acquisition.m_waveform.tolist()
+                    # for b,el in enumerate(test_list):
+                        # if el>0:
+                            # print("thread: "+str(i)+" index: "+str(b)+" = "+str(el))
+                    continue
             else:
-                # no contact I advance by dt
+                # if i==1 :#or i==0:
+                    # print('next')
                 continue
         return 0
 
-    def get_amplitude(self,ball:RollingElement,i:int):
+    def get_position_pulse_in_waveform(self,time_enter_defect,dt):
+        return int((dt/self.m_acquisition.m_dt))
 
-
-
-
-        return 0
+    def get_amplitude(self,ball:RollingElement,interval_underball:tuple):
+        # test if I am leaving the first interval
+        pos_current_contact_interval=self.m_bearing.m_defect.\
+                m_x_pos_filtered[interval_underball[0]]
+        if interval_underball[0]-1>=0:
+            # print("previous contact inteval index was: "+\
+                    # str(interval_underball[1]-1))
+            # print(self.m_bearing.m_defect.\
+                    # m_x_pos_filtered)
+            pos_previous_contact_interval=self.m_bearing.m_defect.\
+                    m_x_pos_filtered[interval_underball[0]-1]+\
+                    self.m_bearing.m_defect.\
+                    m_lambda_filtered[interval_underball[0]-1]
+            amplitude=self.m_gamma*(pos_current_contact_interval\
+                    -pos_previous_contact_interval)
+            return amplitude
+        else:
+            amplitude=self.m_gamma*(pos_current_contact_interval)
+            return amplitude 
 
 
     def find_interval_under_ball(self,ball:RollingElement,j):
-        # finds the interval under the ball and return the interval if it makes
-        # contact
-        # if j==0:
-            # print("interval at: "+str(self.m_bearing.m_defect.m_x_pos_filtered))
         for k in range(len(self.m_bearing.m_defect.m_x_pos_filtered)):
-            gogo=0
-            if j==0 and gogo==0:
-                gogo=1
-                print("First invocation")
             ball_position=ball.m_x_pos_in_defect
             begin_interval=self.m_bearing.m_defect.m_x_pos_filtered[k]
             end_interval=self.m_bearing.m_defect.m_x_pos_filtered[k]+\
@@ -93,72 +117,43 @@ class Simulation(object):
             if(begin_interval<ball_position and ball_position<end_interval):
                 if k not in ball.m_index_interval_touched:
                     ball.m_index_interval_touched.append(k)
-                    if j==0:
-                        print("ball_position "+str(ball_position))
-                        print("begin_interval "+str(begin_interval))
-                        print("end_interval "+str(end_interval))
-                        print("-----> contact:"+str(self.m_bearing.m_defect.m_index_filtered[k]))
-                        print("#######")
-                    return self.m_bearing.m_defect.m_index_filtered[k]
+                    return (k,self.m_bearing.m_defect.m_index_filtered[k])
                 else: continue
-            if(begin_interval==self.m_bearing.m_defect.m_L 
+            if(begin_interval==self.m_bearing.m_defect.m_L
                     and begin_interval<ball_position):
-                if j==0:
-                    print("last interval detected")
-                    print("ball_position "+str(ball_position))
-                    print("begin_interval "+str(begin_interval))
-                    print("end_interval "+str(end_interval))
-                    print("-----> contact:"+str(self.m_bearing.m_defect.m_index_filtered[k]))
-                    print("#######")
-                return self.m_bearing.m_defect.m_index_filtered[k]
+                return (k,self.m_bearing.m_defect.m_index_filtered[k])
         return 0
-
-#
-#
-#            #advance the distance
-#            # distance+=self.m_bearing.m_defect.m_x_pos_filtered[i]
-#
-#            if j==0:
-#                print("ball at: "+str(ball.m_x_pos_in_defect))
-#                print("distance at: "+str(distance))
-#            # check if the ball is this interval
-#            if distance < ball.m_x_pos_in_defect:
-#
-#                # if j==0:
-#                    # print(str(j)+"next")
-#                continue
-#            else:
-#                # print("interval i "+str(i))
-#                return i
-#            distance=self.m_bearing.m_defect.m_x_pos_filtered[i]
-#
-
-#                # if j==0:
-#                    # print(str(j)+"bellow ball")
-#                if i in self.m_bearing.m_defect.m_index_filtered:
-#                    if j==0:
-#                        print("contact")
-#                    return i
-#                else:
-#                    return 0
 
 
     def start(self):
         time_start=time.time()
-        print("fonction to implement")
         for t in self.m_threads:
             t.start()
         for t in self.m_threads:
             t.join()
+        test_list=self.m_acquisition.m_waveform.tolist()
         print("simulation completed in "+str(time.time()-time_start)+"s.")
 
     def get_results(self,format:str):
         print("TODO: Implement this function")
         if format=='as_array':
-            print('output formated as array')
+            print("output formated as array, it's going to be ugly but you \
+            asked for it")
+            np.set_printoptions(threshold=sys.maxsize)
+            print(self.m_acquisition.m_waveform)
+
         elif format=='as_file':
             print('output formated as file')
         elif format=='as_graph':
+            import matplotlib.pyplot as plt
+            x=np.arange(0,self.m_acquisition.m_waveform_len)
+            y=self.m_acquisition.m_waveform
+            plt.title("Line graph") 
+            plt.xlabel("X axis") 
+            plt.ylabel("Y axis") 
+            plt.plot(x, y, color ="red") 
+
+
             print('output formated as graph')
         else:
             print("Err: format unknown")
@@ -174,10 +169,11 @@ class Simulation(object):
                 str(self.m_n_ball_to_pass))
         print("#")
         print("################################################### ")
-        if(input("Do you want to start the simulation?(y/n)")=='y'):
-                self.start()
-        else:
-            print("ok I won't do anything")
+        #TODO: uncomment this user input
+        # if(input("Do you want to start the simulation?(y/n)")=='y'):
+        self.start()
+        # else:
+            # print("ok I won't do anything")
 
 
 
