@@ -2,12 +2,9 @@ import numpy as np
 
 class Defect(object):
     """
-    Documentation to do
+    Defect Object class
     """
     def __init__(self, a_L:float,a_N:int,a_lambda:np.ndarray,a_delta:np.ndarray):
-        """
-        Documentation to do
-        """
         self.m_L=a_L # The length of the defect
         self.m_N=a_N # The number of intervals in the defect
         self.m_lambda=np.append(a_lambda,[0]) # Width of intervals
@@ -25,7 +22,7 @@ class Defect(object):
 
     def filter_interval(self):
         """
-        Documentation to do
+        Extract the intervals that will be in contact with the rolling element
         """
         i=0
         m_index_filtered=[]
