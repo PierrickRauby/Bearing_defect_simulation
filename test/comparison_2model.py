@@ -14,14 +14,19 @@ def main():
     print("#  theoretical peaks from the bearing defect ")
     print("#  equations")
     print("################################################### ")
+    # Create a bearing
     my_bearing=Bearing(a_rpm=2000)
+    # Calculate the BPFO freq draw it and do the same for harmo 2 and 3
     plt.axvline(my_bearing.get_BPFO_freq(), 0, 1,c='g', label='1x BPFO')
     plt.axvline(2*my_bearing.get_BPFO_freq(), 0, 1,c='m', label='2x BPFO')
     plt.axvline(3*my_bearing.get_BPFO_freq(), 0, 1,c='b', label='3x BPFO')
     plt.legend(title="Theoretical freq")
+    # Create the Acquisition
     my_acquisition=Acquisition(a_noise=0.0)
+    # Create the simulation and start it
     my_simulation=Simulation(my_bearing,my_acquisition)
     my_simulation.start()
+    # Show the graph with the above calculated harmonics
     my_simulation.get_results(format='as_graph',file_name='2000_rpm.png',
             title='Simulated 2000rpm')
     f1 = Image.open("2000_rpm.png").show()
