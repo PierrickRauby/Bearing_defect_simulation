@@ -1,7 +1,8 @@
 # Bearing_defect_simulation
+[![Python 3.6](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-391/)
+
 A python library to create vibration signal for bearing defects. 
 This as been developped and tested using python3.9.1
-[![Python 3.6](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-391/)
 
 ## How to use it? 
 First clone it:
