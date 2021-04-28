@@ -75,11 +75,11 @@ def invoke_parser():
     )
     parser.add_argument(
         "--a_lambda", nargs='+',
-        help="The different lengths of the intervals representing the defect."
+        help="The different lengths of the intervals representing the defect (mm)."
     )
     parser.add_argument(
         "--a_delta", nargs='+',
-        help="The different depths of the intervals representing the defect."
+        help="The different depths of the intervals representing the defect (mm)."
     )
     parser.add_argument(
         "--duration", nargs='?', type=float,default='1',
