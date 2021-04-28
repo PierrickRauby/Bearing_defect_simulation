@@ -9,7 +9,7 @@ from Bearing_defect_simulation.Bearing.Defect import Defect
 
 class Bearing(object):
     """
-    Documentation TODO
+    Bearing object class
     """
     def __init__(self,a_n:int=16,a_dP:float=71.501,a_race:str='outer',
             a_rpm:int=2000,a_dB:float=8.4074,a_theta:float=15.17,
@@ -28,7 +28,7 @@ class Bearing(object):
             self.m_innerRace=True # True if working on the outer race
         elif a_race=='outer':
             self.m_outerRace=True # True if working on the inner race
-        else: # TODO: handle error in a better way
+        else: 
             print("error ! Race should be either 'inner' or 'outer'")
             return 1
         self.m_rpm=a_rpm/60 # Rpm of the bearing (rev/min)->(rad/s)
@@ -49,8 +49,6 @@ class Bearing(object):
         self.m_theta=a_theta*math.pi/180 # The contact
         self.m_duration_between_ball=1/self.get_BPFO_freq()
                 #angle of the bearing (deg)->(rad)
-        #TODO: keep or remove the next line 
-        # self.get_info()
 
     def get_BPFO_freq(self):
         # See proposal page 3 for the derivation of the BPFO defect frequencies
