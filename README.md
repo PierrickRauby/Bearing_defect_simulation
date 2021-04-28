@@ -16,7 +16,7 @@ python3 -m pip install -r requirements.txt
 
 Then you can run the simulation by doing:
 ```
-python3 simulation . py
+python3 simulation.py
 ```
 
 This will run the default settings for the simulation, the simulation.py code also come with and commandline argument parser with the following option:
