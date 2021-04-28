@@ -7,7 +7,7 @@ This as been developped and tested using python3.9.1
 ## How to use it? 
 First clone it:
 ```
-git clone https://github.gatech.edu/prauby3/Bearing_defect_simulation.git
+https://github.com/PierrickRauby/Bearing_defect_simulation.git
 cd Bearing_defect_simulation
 ```
 Then install the requirements:
