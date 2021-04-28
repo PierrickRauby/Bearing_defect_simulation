@@ -5,7 +5,7 @@ from typing import Tuple
 
 class Acquisition(object):
     """
-    Documentation TOD
+    Acquisition class, represents the simulation time discretization
     """
     def __init__(self,a_duration:float=1,a_frequency:float=20000,
             a_noise:float=0.1):
@@ -13,8 +13,6 @@ class Acquisition(object):
         self.m_frequency=a_frequency # frequency of acquisition in (Hz)
         self.m_dt=1/a_frequency #time between 2 sampling point 1/m_frequency (s)
         self.m_noise=a_noise #noise parameter in the waveform
-
-
         # Atttributes relative to the vibration signal
         self.m_waveform_len=round(self.m_duration*self.m_frequency)
         self.m_waveform=np.zeros(self.m_waveform_len)
@@ -25,6 +23,7 @@ class Acquisition(object):
         return self.m_spectrum
 
     def generate_fft(self):
+        # This is not the best FFT ever but it does the job
         #ref:https://pythontic.com/visualization/signals/fouriertransform_fft 
         fourierTransform = np.fft.fft(self.m_waveform)/\
                 len(self.m_waveform)           # Normalize amplitude
