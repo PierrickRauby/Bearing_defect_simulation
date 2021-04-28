@@ -20,14 +20,22 @@ def main():
     print("#  present in the real spectruum. This is an expected ")
     print("#  limitation of the model.")
     print("################################################### ")
+    # Create the Bearing in the same config as Nasa
     my_bearing=Bearing(a_rpm=2000)
+    # Create the Acquisition
     my_acquisition=Acquisition(a_frequency=20480,a_noise=0.2)
+    # Create the Simulation start it and show the results
     my_simulation=Simulation(my_bearing,my_acquisition)
     my_simulation.start()
     my_simulation.get_results(format='as_graph',
             file_name='simulated_signal.png',title='Simulated Signal')
     plt.close()
-    array=pd.read_csv('Nasa_Test3_Healthy.csv', sep=',',header=0).values
+    # Load and plot some NASA data from .csv (this can be changed 
+    #  with the otherscsv: 
+    #       - Nasa_Test2_BPFO.csv 
+    #       - Nasa_Test3_BPFO.csv 
+    #       - Nasa_Test3_Healthy.csv
+    array=pd.read_csv('Nasa_Test3_BPFO.csv', sep=',',header=0).values
     fft_res=generate_fft(array)
     x=fft_res[0][:2000]
     y=fft_res[1][:2000]
@@ -36,6 +44,7 @@ def main():
     plt.ylabel("Amplitude")
     plt.plot(x, y, color ="blue")
     plt.savefig('Nasa_data.png')
+    # Display the 2 graph side by side
     f1 = Image.open("simulated_signal.png")
     f2 = Image.open("Nasa_data.png")
     get_concat_h(f1, f2).save('replicative_validation.png')
@@ -44,6 +53,7 @@ def main():
     f3 = Image.open("replicative_validation.png").show()
 
 def get_concat_h(im1, im2):
+    # helper, not from me
     # https://note.nkmk.me/en/python-pillow-concat-images/
     dst = Image.new('RGB', (im1.width + im2.width, im1.height))
     dst.paste(im1, (0, 0))
@@ -51,7 +61,8 @@ def get_concat_h(im1, im2):
     return dst
 
 
-def generate_fft(array):
+def generate_fft(array):   
+    # helper, not from me
     #ref:https://pythontic.com/visualization/signals/fouriertransform_fft 
     fourierTransform = np.fft.fft(array)/20
     fourierTransform = fourierTransform[range(int(len(array)/\
