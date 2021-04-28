@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+# Because OsX create DS_store
+.DS_Store
+# The results
+*.png
