@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 # Because OsX create DS_store
 .DS_Store
+# The results
+*.png

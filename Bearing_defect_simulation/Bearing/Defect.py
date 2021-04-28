@@ -4,7 +4,7 @@ class Defect(object):
     """
     Documentation to do
     """
-    def __init__(self, a_L:int,a_N:int,a_lambda:np.ndarray,a_delta:np.ndarray):
+    def __init__(self, a_L:float,a_N:int,a_lambda:np.ndarray,a_delta:np.ndarray):
         """
         Documentation to do
         """

@@ -34,7 +34,7 @@ class Simulation(object):
         self.m_bearing=bearing
         self.m_acquisition=acquisition
         # Proportionality constant
-        self.m_gamma=1
+        self.m_gamma=10
 
         # Create a thread per ball, but don't start it
         # TODO: check speed with thread and processes, be carefull needs a lot 
@@ -56,30 +56,17 @@ class Simulation(object):
         #advange along x during dt
         dx=self.m_acquisition.m_dt/ball.m_duration*self.m_bearing.m_defect.m_L
         dt=time_enter_defect
-        if i==1 or i==0:
-            print("thread: "+str(i)+" time_enter_defect: "+str(time_enter_defect))
         while(dt<time_exit_defect):
             dt+=self.m_acquisition.m_dt
             ball.advance(dx)
             interval_underball=self.find_interval_under_ball(ball,i)
             if(interval_underball):
-                # if i==1 :#or i==0:
-                    # print("interval_underball: "+str(interval_underball))
-                    amplitude=self.get_amplitude(ball,interval_underball)
-                    position_in_array=self.get_position_pulse_in_waveform\
-                            (time_enter_defect,dt)
-                    # print("thread: "+str(i)+" dt: "+str(dt))
-                    # print("thread: "+str(i)+" amplitude: "+str(amplitude))
-                    # print("thread: "+str(i)+" position_in_array: "+str(position_in_array))
-                    self.m_acquisition.m_waveform[position_in_array]=amplitude
-                    # test_list=self.m_acquisition.m_waveform.tolist()
-                    # for b,el in enumerate(test_list):
-                        # if el>0:
-                            # print("thread: "+str(i)+" index: "+str(b)+" = "+str(el))
-                    continue
+                amplitude=self.get_amplitude(ball,interval_underball)
+                position_in_array=self.get_position_pulse_in_waveform\
+                        (time_enter_defect,dt)
+                self.m_acquisition.m_waveform[position_in_array]=amplitude
+                continue
             else:
-                # if i==1 :#or i==0:
-                    # print('next')
                 continue
         return 0
 
@@ -91,10 +78,6 @@ class Simulation(object):
         pos_current_contact_interval=self.m_bearing.m_defect.\
                 m_x_pos_filtered[interval_underball[0]]
         if interval_underball[0]-1>=0:
-            # print("previous contact inteval index was: "+\
-                    # str(interval_underball[1]-1))
-            # print(self.m_bearing.m_defect.\
-                    # m_x_pos_filtered)
             pos_previous_contact_interval=self.m_bearing.m_defect.\
                     m_x_pos_filtered[interval_underball[0]-1]+\
                     self.m_bearing.m_defect.\
@@ -104,7 +87,7 @@ class Simulation(object):
             return amplitude
         else:
             amplitude=self.m_gamma*(pos_current_contact_interval)
-            return amplitude 
+            return amplitude
 
 
     def find_interval_under_ball(self,ball:RollingElement,j):
@@ -131,30 +114,39 @@ class Simulation(object):
             t.start()
         for t in self.m_threads:
             t.join()
-        test_list=self.m_acquisition.m_waveform.tolist()
+        noise = np.random.normal(0,
+                self.m_acquisition.m_noise*max(self.m_acquisition.m_waveform),
+                self.m_acquisition.m_waveform.shape)
+        self.m_acquisition.m_waveform+=noise
         print("simulation completed in "+str(time.time()-time_start)+"s.")
 
-    def get_results(self,format:str):
-        print("TODO: Implement this function")
+    def get_results(self,format:str,file_name='results.png',
+            title="Simulated spectrum"):
+        fft_res=self.m_acquisition.get_fft()
+        x=fft_res[0][:int(self.m_acquisition.m_frequency/10)]
+        y=fft_res[1][:int(self.m_acquisition.m_frequency/10)]
         if format=='as_array':
             print("output formated as array, it's going to be ugly but you \
             asked for it")
             np.set_printoptions(threshold=sys.maxsize)
-            print(self.m_acquisition.m_waveform)
+            print(self.m_acquisition.m_spectrum)
 
         elif format=='as_file':
             print('output formated as file')
         elif format=='as_graph':
             import matplotlib.pyplot as plt
-            x=np.arange(0,self.m_acquisition.m_waveform_len)
-            y=self.m_acquisition.m_waveform
-            plt.title("Line graph") 
-            plt.xlabel("X axis") 
-            plt.ylabel("Y axis") 
-            plt.plot(x, y, color ="red") 
-
-
-            print('output formated as graph')
+            plt.title(title)
+            plt.xlabel("Freq (Hz)")
+            plt.ylabel("Amplitude")
+            plt.plot(x, y, color ="red")
+            plt.savefig(file_name)
+        elif format=='show':
+            import matplotlib.pyplot as plt
+            plt.title(title)
+            plt.xlabel("Freq (Hz)")
+            plt.ylabel("Amplitude")
+            plt.plot(x, y, color ="red")
+            plt.show()
         else:
             print("Err: format unknown")
 
@@ -169,11 +161,6 @@ class Simulation(object):
                 str(self.m_n_ball_to_pass))
         print("#")
         print("################################################### ")
-        #TODO: uncomment this user input
-        # if(input("Do you want to start the simulation?(y/n)")=='y'):
-        self.start()
-        # else:
-            # print("ok I won't do anything")
 
 
 
