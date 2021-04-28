@@ -21,23 +21,21 @@ python3 simulation.py
 
 This will run the default settings for the simulation, the simulation.py code also come with and commandline argument parser with the following option:
 
-
-| Command line argument |       |                                                                           |                       |
-|:---------------------:|-------|---------------------------------------------------------------------------|-----------------------|
-| Argument              | Type  | Fonction                                                                  | Default               |
-| --n                   | int   | Number of rolling elements                                                | 16                    |
-| --dP                  | float | Pitch diameter of the bearing (mm)                                        | 71.501                |
-| --race                | str   | Race affected by the defect either "inner" or "outer"                     | "outer"               |
-| --rpm                 | int   | Rotational speed of the cage one relative to the other (rpm)              | 2000                  |
-| --dB                  | float | The Rolling Element Diameter (mm)                                         | 8.4074                |
-| --theta               | float | The contact angle of the bearing (deg)                                    | 15.17                 |
-| --L                   | float | The length of the defect region (mm)                                      | 3.8                   |
-| --N                   | int   | The number of interval of the defect.                                     | 5                     |
-| --a_lambda            | list  | The different lengths of the intervals representing the defect (mm)       | [0.7,0.7,0.8,0.8,0.8] |
-| --a_delta             | list  | The different depth of the intervals representing the defect (mm)         | [0.5,0,0.5,0,0.7]     |
-| --duration            | float | The duration of the simulation (s)(not the time the program takes to run) | 1                     |
-| --frequency           | float | The time resolution of the simulation (Hz)                                | 20000                 |
-| --noise               | float | The ration of noise to add in the simulation [0.0,0.9]                    | 0.1                   |
+| Argument    | Type  | Fonction                                                                  | Default               |
+|-------------|-------|---------------------------------------------------------------------------|-----------------------|
+| --n         | int   | Number of rolling elements                                                | 16                    |
+| --dP        | float | Pitch diameter of the bearing (mm)                                        | 71.501                |
+| --race      | str   | Race affected by the defect either "inner" or "outer"                     | "outer"               |
+| --rpm       | int   | Rotational speed of the cage one relative to the other (rpm)              | 2000                  |
+| --dB        | float | The Rolling Element Diameter (mm)                                         | 8.4074                |
+| --theta     | float | The contact angle of the bearing (deg)                                    | 15.17                 |
+| --L         | float | The length of the defect region (mm)                                      | 3.8                   |
+| --N         | int   | The number of interval of the defect.                                     | 5                     |
+| --a_lambda  | list  | The different lengths of the intervals representing the defect (mm)       | [0.7,0.7,0.8,0.8,0.8] |
+| --a_delta   | list  | The different depth of the intervals representing the defect (mm)         | [0.5,0,0.5,0,0.7]     |
+| --duration  | float | The duration of the simulation (s)(not the time the program takes to run) | 1                     |
+| --frequency | float | The time resolution of the simulation (Hz)                                | 20000                 |
+| --noise     | float | The ration of noise to add in the simulation [0.0,0.9]                    | 0.1                   |
 
 __Note1:__ The duration command-line argument does not represent the program’s runtime but the duration for which the ball roll in the bearing.
 
